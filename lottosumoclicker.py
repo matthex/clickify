@@ -5,23 +5,11 @@ name = 'lottosumo'
 
 def init():
     global base_url
-    global db_id
-    global conn
-    global cur
+    global config
 
-    #get db connection info
-    with open('config.json') as json_data_file:
-        config = json.load(json_data_file)
-
-    #connect to db
-    conn = psycopg2.connect("dbname='" + config['db-conn']['db'] + "' user='" + config['db-conn']['user'] + "' host='" + config['db-conn']['host'] + "' password='" + config['db-conn']['password'] + "'")
-    cur = conn.cursor()
-
-    #get url
-    cur.execute("SELECT id, url FROM clickify.sites WHERE name='" + name + "'") 
-    result = cur.fetchone()
-    db_id = result[0]
-    base_url = result[1]
+    #get config from heroku config vars
+    config = json.loads(os.environ[name])
+    base_url = config['base_url']
 
 def harvest():
     #session
@@ -66,10 +54,8 @@ def login(session):
     token = xml.xpath('//input[@name="_token"]/@value')[0]
 
     #login information
-    cur.execute("SELECT username, password FROM clickify.logins WHERE site_id =" + str(db_id))
-    result = cur.fetchone()
-    email = result[0]
-    password = result[1]
+    email = config['email']
+    password = config['password']
 
     #create post data
     post_data = [
@@ -105,10 +91,6 @@ def claim_wins(session, html):
 
         #redeem
         session.post(base_url + "lotto/gewinn/einloesen", data=post_data)
-
-        #store win in DB
-        cur.execute("INSERT INTO clickify.wins (win, date, site_id) VALUES ('" + win + "', now()," + str(db_id) + ")")
-        conn.commit()
 
 def get_ticket_count(html):
     match = re.search('Sumo Credits:\s<span\sclass="">(\d*)', html)

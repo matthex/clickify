@@ -1,8 +1,0 @@
-{
-    "db-conn":{
-        "host":"localhost",
-        "user":"",
-        "password":"",
-        "db":"clickify"
-    }
-}
