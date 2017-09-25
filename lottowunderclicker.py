@@ -1,4 +1,4 @@
-import requests, re, datetime, locale, random, psycopg2, json
+import requests, re, datetime, random, psycopg2, json
 from lxml import html
 from os import environ
 
@@ -38,8 +38,7 @@ def harvest():
     #get ticket information
     credit_count = get_credit_count(main_page)
     booster_count = get_booster_count(main_page)
-    locale.setlocale(locale.LC_ALL, 'de_DE.utf8')
-    current_lottery_date = datetime.date.today().strftime("%d %b").lstrip('0')
+    current_lottery_date = str(datetime.today().day) + " " + convert_month(datetime.today().month)
     current_lottery_ticket_count = get_ticket_count_for_current_lottery(current_lottery_date, ticket_page)
 
     #place tickets
@@ -147,6 +146,22 @@ def logfile(text):
     f = open('logfile', 'w')
     f.write(text)
     f.close()
+
+def convert_month(month):
+  return {
+        1: "Jan",
+        2: "Feb",
+        3: "Mär",
+        4: "Apr",
+        5: "Mai",
+        6: "Jun",
+        7: "Jul",
+        8: "Aug",
+        9: "Sep",
+        10: "Okt",
+        11: "Nov",
+        12: "Dez"
+    }.get(month, "Err")
 
 if __name__ == '__main__':
     init()
