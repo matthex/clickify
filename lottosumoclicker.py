@@ -1,5 +1,6 @@
 import requests, re, random, psycopg2, json
 from lxml import html
+from os import environ
 
 name = 'lottosumo'
 
@@ -8,7 +9,7 @@ def init():
     global config
 
     #get config from heroku config vars
-    config = json.loads(os.environ[name])
+    config = json.loads(environ[name])
     base_url = config['base_url']
 
 def harvest():
