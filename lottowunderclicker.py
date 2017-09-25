@@ -38,7 +38,7 @@ def harvest():
     #get ticket information
     credit_count = get_credit_count(main_page)
     booster_count = get_booster_count(main_page)
-    locale.setlocale(locale.LC_ALL, 'deu_deu')
+    locale.setlocale(locale.LC_ALL, 'de_DE.utf8')
     current_lottery_date = datetime.date.today().strftime("%d %b").lstrip('0')
     current_lottery_ticket_count = get_ticket_count_for_current_lottery(current_lottery_date, ticket_page)
 
