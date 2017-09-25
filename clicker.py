@@ -5,7 +5,7 @@ import lottowunderclicker
 app = Flask(__name__)
 
 @app.route("/")
-def lottosumo():
+def hello():
     return "Hello!"
 
 @app.route("/lottosumo")
