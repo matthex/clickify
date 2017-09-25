@@ -39,6 +39,10 @@ def harvest():
     #claim wins
     claim_wins(session, ticket_page)
 
+    #claim cards
+    card_page = session.get(base_url + "rubbellose").text
+    claim_cards(token, session, card_page)
+
     #get main page
     main_page = session.get(base_url).text
 
@@ -50,7 +54,8 @@ def harvest():
     current_lottery_ticket_count = get_ticket_count_for_current_lottery(current_lottery_date, ticket_page)
 
     #place tickets
-    while current_lottery_ticket_count < 10 and credit_count >0:
+    played_tickets = 0
+    while current_lottery_ticket_count < 10 and credit_count > 0:
         if booster_count > 0:
             play_lottery(session, token, True)
             booster_count -= 1
@@ -58,6 +63,9 @@ def harvest():
             play_lottery(session, token)
         current_lottery_ticket_count += 1
         credit_count -= 1
+        played_tickets += 1
+    
+    return played_tickets
 
 def login(session):
     login_url = base_url + "login"
@@ -108,6 +116,17 @@ def claim_wins(session, html):
         #store win in DB
         cur.execute("INSERT INTO clickify.wins (win, date, site_id) VALUES ('" + win + "', now()," + str(db_id) + ")")
         conn.commit()
+
+def claim_cards(token, session, html):
+    cards = re.findall('https:\/\/lottowunder\.com\/rubbellos\/spielen\/(\d+)', html)
+    for card in cards:
+        #create post data
+        post_data = [
+            ('_token', token),
+            ('card_id', card)
+        ]
+        #redeem
+        session.post(base_url + "rubbellos/einloesen?id=" + card, data=post_data)
 
 def get_credit_count(html):
     match = re.search('(\d*)&nbsp;<img src=\'https:\/\/lottowunder\.com\/assets\/img\/credit\.png', html)

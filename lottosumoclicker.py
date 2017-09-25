@@ -48,10 +48,14 @@ def harvest():
     current_lottery_ticket_count = get_ticket_count_for_current_lottery(current_lottery_date, ticket_page)
 
     #place tickets
+    played_tickets = 0
     while current_lottery_ticket_count < 10 and ticket_count > 0:
         play_lottery(session, token)
         current_lottery_ticket_count += 1
         ticket_count -= 1
+        played_tickets += 1
+
+    return played_tickets
 
 def login(session):
     login_url = base_url + "user/login"
