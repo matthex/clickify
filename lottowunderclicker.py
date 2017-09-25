@@ -38,7 +38,7 @@ def harvest():
     #get ticket information
     credit_count = get_credit_count(main_page)
     booster_count = get_booster_count(main_page)
-    current_lottery_date = str(datetime.today().day) + " " + convert_month(datetime.today().month)
+    current_lottery_date = str(datetime.date.today().day) + " " + convert_month(datetime.date.today().month)
     current_lottery_ticket_count = get_ticket_count_for_current_lottery(current_lottery_date, ticket_page)
 
     #place tickets
