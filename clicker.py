@@ -4,6 +4,10 @@ import lottowunderclicker
 
 app = Flask(__name__)
 
+@app.route("/")
+def lottosumo():
+    return "Hello!"
+
 @app.route("/lottosumo")
 def lottosumo():
     lottosumoclicker.init()
