@@ -18,6 +18,7 @@ def harvest():
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36",
     }
+    session.headers = headers
 
     #login to get session and token
     token = login(session)
@@ -38,12 +39,20 @@ def harvest():
     #get ticket information
     credit_count = get_credit_count(main_page)
     booster_count = get_booster_count(main_page)
+    wonderstar_count = get_wonderstar_count(main_page)
     current_lottery_date = str(datetime.date.today().day) + " " + convert_month(datetime.date.today().month)
     current_lottery_ticket_count = get_ticket_count_for_current_lottery(current_lottery_date, ticket_page)
 
+    ticket_maximum = 10
+
+    #activate wonderstar
+    if wonderstar_count > 0:
+        session.get(base_url + "wunderstern")
+        ticket_maximum = 15
+
     #place tickets
     played_tickets = 0
-    while current_lottery_ticket_count < 10 and credit_count > 0:
+    while current_lottery_ticket_count < ticket_maximum and credit_count > 0:
         if booster_count > 0:
             play_lottery(session, token, True)
             booster_count -= 1
@@ -116,6 +125,10 @@ def get_credit_count(html):
 
 def get_booster_count(html):
     match = re.search('(\d*)&nbsp;<img src=\'https:\/\/lottowunder\.com\/assets\/img\/booster\.png', html)
+    return int(match[1])
+
+def get_wonderstar_count(html):
+    match = re.search('(\d*)&nbsp;<img src=\'https:\/\/lottowunder\.com\/assets\/img\/star\.png', html)
     return int(match[1])
 
 def get_ticket_count_for_current_lottery(date, html):
