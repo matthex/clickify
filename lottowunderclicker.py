@@ -92,7 +92,7 @@ def claim_wins(session, html):
     html = html.replace("\r", '').replace("\n", '').replace(" ", "")
 
     #get win tickets information
-    win_tickets = re.findall('<formclass="frmRedeem"role="form"method="post"><inputtype="hidden"name="_token"value="(\w+)"><inputtype="hidden"name="redeem_ticket"value="(\d+)"><buttonid="redeem\d+"type="submit"class="btnbtn-successbtn-xs">Gewinneinlösen<\/button><\/form>', html)
+    win_tickets = re.findall('<formclass="frmRedeem"role="form"method="post"ticket-id="\d+"><inputtype="hidden"name="_token"value="(\w+)"><inputtype="hidden"name="redeem_ticket"value="(\d+)"><buttonid="redeem\d+"type="submit"class="btnbtn-successbtn-xs">Gewinneinlösen<\/button><\/form>', html)
 
     for win_ticket in win_tickets:
         win = "win"
