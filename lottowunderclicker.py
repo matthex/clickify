@@ -121,21 +121,21 @@ def claim_cards(token, session, html):
 
 def get_credit_count(html):
     match = re.search('&nbsp;<img src=\'https:\/\/lottowunder\.com\/assets\/img\/credit\.png\' alt=\'Wunder Dollar ist eine virtuelle und kostenlose Währung, die zum Spielen benötigt wird\.\'  style=\'width: 20px\' title=\'Wunder Dollar ist eine virtuelle und kostenlose Währung, die zum Spielen benötigt wird\.\' rel=\'tooltip\' \/>&nbsp;(\d*)', html)
-    if match == None:
+    if match == None or match[1] == '':
         return 0
     else:
         return int(match[1])
 
 def get_booster_count(html):
     match = re.search('&nbsp;<img src=\'https:\/\/lottowunder\.com\/assets\/img\/booster\.png\' alt=\'Mit Wunder Booster kannst du deine Wunder Doller Gewinne verdoppeln!\'  style=\'width: 20px\' title=\'Mit Wunder Booster kannst du deine Wunder Doller Gewinne verdoppeln!\' rel=\'tooltip\' \/>&nbsp;(\d*)', html)
-    if match == None:
+    if match == None or match[1] == '':
         return 0
     else:
         return int(match[1])
 
 def get_wonderstar_count(html):
     match = re.search('&nbsp;<img src=\'https:\/\/lottowunder\.com\/assets\/img\/star\.png\' alt=\'Aktiviere einen Wunder Stern um mehr Spielscheine zu spielen!\'  style=\'width: 20px\' title=\'Aktiviere einen Wunder Stern um mehr Spielscheine zu spielen!\' rel=\'tooltip\' \/>&nbsp;(\d*)', html)
-    if match == None:
+    if match == None or match[1] == '':
         return 0
     else:
         return int(match[1])
@@ -143,7 +143,7 @@ def get_wonderstar_count(html):
 def get_ticket_count_for_current_lottery(date, html):
     html = html.replace("\r", '').replace("\n", '')
     match = re.search('<h4>Ziehung\s\w\w\s*' + date + '<\/h4>(.*)<div class="tab-pane', html)
-    if match == None:
+    if match == None or match[1] == '':
         return 0
     else:
         return len(re.findall('lotto_balls', match[1]))
