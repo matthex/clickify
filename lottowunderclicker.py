@@ -45,6 +45,11 @@ def harvest():
 
     ticket_maximum = 10
 
+    #buy booster
+    if credit_count >= 15:
+        boosters_to_buy = int((credit_count - 10) / 5)
+        buy_booster(session, token, boosters_to_buy)
+
     #activate wonderstar
     if wonderstar_count > 0:
         session.get(base_url + "wunderstern")
@@ -147,6 +152,15 @@ def get_ticket_count_for_current_lottery(date, html):
         return 0
     else:
         return len(re.findall('lotto_balls', match[1]))
+
+def buy_booster(session, token, boosters_to_buy):
+    #create post data
+    post_data = [
+        ('_token', token),
+        ('amount', boosters_to_buy)
+    ]
+    #play
+    session.post(base_url + "buybooster", data=post_data)
 
 def play_lottery(session, token, boost = False):
     #generate numbers
